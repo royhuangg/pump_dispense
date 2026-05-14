@@ -1,0 +1,19 @@
+{
+  "name": "bib-auto-calibration",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "remotion studio",
+    "render": "remotion render Main out/bib-auto-calibration.mp4"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.380",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "remotion": "4.0.380"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.0",
+    "typescript": "5.7.3"
+  }
+}
