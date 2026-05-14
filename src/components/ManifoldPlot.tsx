@@ -146,12 +146,15 @@ export const ManifoldPlot: React.FC<{ zoomIn?: number }> = ({ zoomIn = 0 }) => {
     return { pr, enter, pulse, fadeOut };
   })();
 
+  const ANOMALY_ARRIVAL = 815;
+
   const deviationLine = (() => {
     if (phase !== "anomaly" && phase !== "compensating") return null;
+    if (frame < ANOMALY_ARRIVAL) return null;
     const from = project(anomalyX, anomalyY, surface(anomalyX, anomalyY));
     const to = project(anomalyX, anomalyY, anomalyZ);
-    const since = frame - 750;
-    const enter = spring({ frame: since - 8, fps, config: { damping: 22 } });
+    const since = frame - ANOMALY_ARRIVAL;
+    const enter = spring({ frame: since, fps, config: { damping: 22 } });
     return { from, to, enter };
   })();
 
@@ -166,7 +169,8 @@ export const ManifoldPlot: React.FC<{ zoomIn?: number }> = ({ zoomIn = 0 }) => {
 
   const anomalyBadge = (() => {
     if (phase !== "anomaly" && phase !== "compensating") return null;
-    const since = frame - 750;
+    if (frame < ANOMALY_ARRIVAL) return null;
+    const since = frame - ANOMALY_ARRIVAL;
     const badgeEnter = spring({ frame: since, fps, config: { damping: 14, stiffness: 110 } });
     const pulse = (Math.sin(since * 0.24) + 1) / 2;
     const pr = project(anomalyX, anomalyY, anomalyZ);
@@ -225,17 +229,10 @@ export const ManifoldPlot: React.FC<{ zoomIn?: number }> = ({ zoomIn = 0 }) => {
 
           <g opacity={surfaceOpacity}>
             {surfaceCells.map((cell, i) => (
-              <path key={i} d={cell.d} fill={cell.color} fillOpacity={0.55} stroke={cell.color} strokeWidth={0.7} strokeOpacity={0.5} />
+              <path key={i} d={cell.d} fill={cell.color} fillOpacity={0.7} stroke="none" />
             ))}
           </g>
 
-          {grid.map((p, i) => {
-            const pr = project(p.x, p.y, p.z + p.jitter);
-            const color = viridis((p.z - 0.21) / 0.21);
-            return (
-              <circle key={i} cx={pr.x} cy={pr.y} r={6.5} fill={color} stroke="white" strokeOpacity={0.4} strokeWidth={1} />
-            );
-          })}
 
           {targetAnchor && (
             <g opacity={targetAnchor.enter * targetAnchor.fadeOut}>
@@ -295,7 +292,7 @@ export const ManifoldPlot: React.FC<{ zoomIn?: number }> = ({ zoomIn = 0 }) => {
             />
           )}
 
-          {(phase === "anomaly" || phase === "compensating" || phase === "normal") && (() => {
+          {(phase === "normal" || ((phase === "anomaly" || phase === "compensating") && frame >= ANOMALY_ARRIVAL)) && (() => {
             const pr = project(anomalyX, anomalyY, anomalyZ);
             const isResolved = phase === "normal";
             const fill = isResolved ? theme.success : theme.error;

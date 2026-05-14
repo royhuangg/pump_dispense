@@ -1,10 +1,10 @@
 {
-  "name": "bib-auto-calibration",
+  "name": "pump-dispense",
   "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "remotion studio",
-    "render": "remotion render Main out/bib-auto-calibration.mp4"
+    "render": "remotion render Main out/dispense-landscape.mp4"
   },
   "dependencies": {
     "@remotion/cli": "4.0.380",

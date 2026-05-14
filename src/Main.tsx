@@ -15,7 +15,7 @@ export const Main: React.FC = () => {
 
   const enter = spring({ frame, fps, config: { damping: 22, stiffness: 90 } });
 
-  const showAnomalyBox = frame >= 750 && frame < 900;
+  const showAnomalyBox = frame >= 815 && frame < 900;
   const showOkBox = frame >= 900;
 
   return (
